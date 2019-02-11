@@ -121,6 +121,5 @@ fi
 export PATH=$PATH:~/usr/local/bin
 
 #myalias
-alias gitlog='git log --pretty='\''format:%C(yellow)%h %C(green)%cd %C(reset)%s %C(red)%d %C(cyan)[%an]'\'' --date=iso'
 alias sshxub='~/alias/login2xubuntu.sh'
 alias sshaws='~/alias/sshaws.sh'
