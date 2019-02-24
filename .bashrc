@@ -119,7 +119,7 @@ fi
 
 #export
 export PATH=$PATH:~/usr/local/bin
-
+export PYTHONDONTWRITEBYTECODE=1
 #myalias
 alias sshxub='~/alias/login2xubuntu.sh'
 alias sshaws='~/alias/sshaws.sh'
