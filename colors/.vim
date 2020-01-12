@@ -1,0 +1,1 @@
+/home/yutat23/dotfiles/.vim
