@@ -26,12 +26,13 @@ set ignorecase
 set incsearch
 set wrapscan
 set hlsearch
+set splitright
 
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
 nnoremap ; :
 nnoremap : ;
-
+nnoremap <Esc><Esc> :nor<CR>
 
 nnoremap j gj
 nnoremap k gk
