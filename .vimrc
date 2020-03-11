@@ -17,6 +17,7 @@ set visualbell
 set showmatch
 set laststatus=2
 set wildmode=list:longest
+set splitright
 
 set expandtab
 set tabstop=2
