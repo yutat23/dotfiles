@@ -31,7 +31,8 @@ colors
 PROMPT="%{${fg[yellow]}%}%1d%{${fg[cyan]}%} %(!.#.$) %{${reset_color}%}"
 
 #path
-export PATH=$PATH:/home/ytkmr/.cargo/bin
+export PATH=$PATH:~/.cargo/bin
+export PATH=$PATH:~/dotfiles/mybin
 
 #apt
 source /etc/zsh_command_not_found

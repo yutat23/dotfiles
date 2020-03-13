@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ -n $1 -o -d $1 ]; then
+if [ -n "$1" ]; then
   abspath=$(cd $(dirname $1) && pwd)/$(basename $1)
   if [ -d $abspath ]; then
     dir=$abspath
