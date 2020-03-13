@@ -51,7 +51,7 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-function chpwd() { exa }
+function chpwd() { l }
 
 #proxy
 if [ -e ~/dotfiles/setProxy.sh ]; then
