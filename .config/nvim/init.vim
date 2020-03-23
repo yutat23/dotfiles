@@ -32,7 +32,7 @@ nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
 nnoremap ; :
 nnoremap : ;
-nnoremap <Esc><Esc> :nor<CR>
+nnoremap <Esc><Esc> :noh<CR>
 
 nnoremap j gj
 nnoremap k gk
