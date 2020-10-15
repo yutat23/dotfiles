@@ -52,6 +52,14 @@ if type bat >/dev/null 2>&1; then
   export BAT_THEME="Monokai Extended"
 fi
 
+if type fdfind >/dev/null 2>&1; then
+  alias fd='fdfind'
+fi
+
+
+if type batcat >/dev/null 2>&1; then
+  alias bat='batcat'
+fi
 
 alias vimr='vim -R'
 alias grep='grep --color=auto'
