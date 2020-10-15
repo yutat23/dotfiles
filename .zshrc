@@ -61,6 +61,10 @@ if type batcat >/dev/null 2>&1; then
   alias bat='batcat'
 fi
 
+if type rgrep >/dev/null 2>&1; then
+  alias rg='rgrep'
+fi
+
 alias vimr='vim -R'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
