@@ -62,7 +62,7 @@ if type batcat >/dev/null 2>&1; then
 fi
 
 if type rgrep >/dev/null 2>&1; then
-  alias rg='rgrep'
+  alias rg='rgrep -n --color'
 fi
 
 alias vimr='vim -R'
