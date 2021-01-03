@@ -25,7 +25,7 @@ set shiftwidth=2
 " Makefile
 let _curfile=expand("%:r")
 if _curfile == 'Makefile'
-    set noexpandtab
+set noexpandtab
 endif
 
 set ignorecase
@@ -43,3 +43,8 @@ nnoremap <Esc><Esc> :noh<CR>
 nnoremap j gj
 nnoremap k gk
 
+augroup MyXML
+  autocmd!
+  autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
+  autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
+augroup END
