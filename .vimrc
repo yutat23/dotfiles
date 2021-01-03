@@ -22,6 +22,11 @@ set splitright
 set expandtab
 set tabstop=2
 set shiftwidth=2
+" Makefile
+let _curfile=expand("%:r")
+if _curfile == 'Makefile'
+    set noexpandtab
+endif
 
 set ignorecase
 set incsearch
