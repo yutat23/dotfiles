@@ -29,7 +29,7 @@ autoload colors
 colors
 #PROMPT="%{${fg[yellow]}%}%~%{${fg[cyan]}%} %(!.#.$) %{${reset_color}%}"
 #PROMPT="%{${fg[yellow]}%}%1d%{${fg[cyan]}%} %(!.#.$) %{${reset_color}%}"
-PROMPT="%{${fg[yellow]}%}%~%{${fg[cyan]}%}
+PROMPT="%{${fg[green]}%}%~%{${fg[blue]}%}
 %B%(!.#.>)%b %{${reset_color}%}"
 
 #path
