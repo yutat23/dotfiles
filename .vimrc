@@ -25,7 +25,7 @@ set shiftwidth=2
 " Makefile
 let _curfile=expand("%:r")
 if _curfile == 'Makefile'
-set noexpandtab
+    set noexpandtab
 endif
 
 set ignorecase
