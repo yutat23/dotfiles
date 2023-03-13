@@ -37,3 +37,11 @@ set fish_plugins theme peco
 function fish_user_key_bindings
 bind \cw peco_select_history
 end
+
+# Base16 Shell
+if status --is-interactive
+    set BASE16_SHELL "$HOME/.config/base16-shell/"
+    source "$BASE16_SHELL/profile_helper.fish"
+end
+
+base16-monokai
