@@ -34,6 +34,7 @@ set wrapscan
 set hlsearch
 set splitright
 
+set list listchars=tab:\▸\-
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
 nnoremap ; :
