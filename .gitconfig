@@ -1,6 +1,6 @@
 [user]
   name = "yutat23"
-  email = "yutat23@gmail.com"
+  email = "45997563+yutat23@users.noreply.github.com"
 
 [alias]
   plog = log --pretty='format:%C(yellow)%h %C(green)%cd %C(reset)%s %C(red)%d %C(cyan)[%an]' --date=iso
