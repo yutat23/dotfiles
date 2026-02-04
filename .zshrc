@@ -25,6 +25,8 @@ export PATH=$PATH:~/dotfiles/mybin
 # ローカルバイナリ
 export PATH=$PATH:~/.local/bin
 
+# Go バイナリ
+export PATH=$PATH:~/go/bin
 
 export ADOC_HOME="$HOME/.adoc"
 [ -f "/Users/yutat23/.ghcup/env" ] && . "/Users/yutat23/.ghcup/env" # ghcup-env
