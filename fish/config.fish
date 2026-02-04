@@ -34,9 +34,9 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
 # モダンなツールのエイリアス（存在する場合）
-if type exa >/dev/null 2>&1
-  alias l='exa --icons --color always'
-  alias ll='exa -la --icons --color always'
+if type eza >/dev/null 2>&1
+  alias l='eza --icons --color always'
+  alias ll='eza -la --icons --color always'
 else
   alias l='ls --color=auto'
   alias ll='ls --color=auto -la'
