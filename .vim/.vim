@@ -1,1 +1,1 @@
-/home/yutat23/dotfiles/.vim
+/Users/yutat23/dotfiles/.vim

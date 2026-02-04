@@ -1,7 +1,40 @@
-#alias
-alias watch="watch -c "
+# =============================================================================
+# fish設定ファイル
+# =============================================================================
 
-if type exa >/dev/null 2>&1;
+# -----------------------------------------------------------------------------
+# 基本設定
+# -----------------------------------------------------------------------------
+
+# デフォルトエディタ
+set -gx EDITOR vim
+
+# -----------------------------------------------------------------------------
+# パス設定
+# -----------------------------------------------------------------------------
+
+# カスタムスクリプト
+set -gx PATH $PATH ~/dotfiles/mybin
+
+# ローカルバイナリ
+set -gx PATH $PATH ~/.local/bin
+
+# システムパス
+set -gx PATH /usr/local/bin $PATH
+
+# -----------------------------------------------------------------------------
+# エイリアス
+# -----------------------------------------------------------------------------
+
+# 基本コマンド
+alias watch="watch -c "
+alias vimr='vim -R'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# モダンなツールのエイリアス（存在する場合）
+if type exa >/dev/null 2>&1
   alias l='exa --icons --color always'
   alias ll='exa -la --icons --color always'
 else
@@ -9,39 +42,61 @@ else
   alias ll='ls --color=auto -la'
 end
 
-if type bat >/dev/null 2>&1;
-  export BAT_THEME="Monokai Extended"
+if type bat >/dev/null 2>&1
+  set -gx BAT_THEME "Monokai Extended"
+else if type batcat >/dev/null 2>&1
+  alias bat='batcat'
+  set -gx BAT_THEME "Monokai Extended"
 end
 
-if type fdfind >/dev/null 2>&1;
+if type fdfind >/dev/null 2>&1
   alias fd='fdfind'
 end
 
-
-if type batcat >/dev/null 2>&1;
-  alias bat='batcat'
-end
-
-if type rgrep >/dev/null 2>&1;
+if type rgrep >/dev/null 2>&1
   alias rg='rgrep -n --color'
 end
 
-alias vimr='vim -R'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+# -----------------------------------------------------------------------------
+# プラグイン設定
+# -----------------------------------------------------------------------------
 
-#peco setting
-set fish_plugins theme peco
-
-function fish_user_key_bindings
-bind \cw peco_select_history
+# peco設定（存在する場合）
+if type peco >/dev/null 2>&1
+  set fish_plugins theme peco
+  
+  function fish_user_key_bindings
+    bind \cw peco_select_history
+  end
 end
 
-# Base16 Shell
+# -----------------------------------------------------------------------------
+# Base16 Shell（カラースキーム）
+# -----------------------------------------------------------------------------
+
 if status --is-interactive
-    set BASE16_SHELL "$HOME/.config/base16-shell/"
+  set BASE16_SHELL "$HOME/.config/base16-shell/"
+  if test -d "$BASE16_SHELL"
     source "$BASE16_SHELL/profile_helper.fish"
+    base16-monokai 2>/dev/null
+  end
 end
 
-base16-monokai
+# -----------------------------------------------------------------------------
+# プロキシ設定（存在する場合）
+# -----------------------------------------------------------------------------
+
+if test -e ~/dotfiles/setProxy.sh
+  chmod +x ~/dotfiles/setProxy.sh 2>/dev/null
+  source ~/dotfiles/setProxy.sh
+end
+
+# -----------------------------------------------------------------------------
+# その他の設定
+# -----------------------------------------------------------------------------
+
+# 履歴設定
+set -gx fish_history_size 100000
+
+# 自動補完の改善
+set -g fish_autosuggestion_enabled 1

@@ -2,11 +2,12 @@
   name = "yutat23"
   email = "45997563+yutat23@users.noreply.github.com"
 
+# -----------------------------------------------------------------------------
+# エイリアス
+# -----------------------------------------------------------------------------
+
 [alias]
-  plog = log --pretty='format:%C(yellow)%h %C(green)%cd %C(reset)%s %C(red)%d %C(cyan)[%an]' --date=iso
-[credential]
-  helper = cache --timeout=86400
-[alias]
+  # 基本コマンドの短縮形
   st = status
   df = diff
   co = commit
@@ -15,6 +16,85 @@
   pl = pull
   ck = checkout
   sw = switch
-  alias = !"if test -z $1; then loop=; for k in `git config --get-regexp ^alias\\. | sort | sed -e 's/^alias\\.\\(\\S*\\).*/\\1/g'`; do echo -n $k; loop="${loop}1"; if test ${#loop} -lt 5; then echo -n '\t'; else echo; loop=; fi; done; exit; fi; git config --list | grep ^alias\\.$1= | sed -e s/^alias\\.//; exit;"
+  lg = log --oneline --decorate --graph --all
+  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cgreen\\ [%cr]\\ [%an]" --abbrev-commit
+  ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cgreen\\ [%cr]\\ [%an]" --abbrev-commit --numstat
+  plog = log --pretty='format:%C(yellow)%h %C(green)%cd %C(reset)%s %C(red)%d %C(cyan)[%an]' --date=iso
+  
+  # 便利なエイリアス
+  unstage = reset HEAD --
+  last = log -1 HEAD
+  visual = !gitk
+  who = shortlog -sn
+  amend = commit --amend --no-edit
+  wipe = !git add -A && git commit -m "WIP"
+  unwip = log -1 --format=%H | xargs git reset HEAD~1
+  
+  # ブランチ操作
+  bd = branch -d
+  bD = branch -D
+  bm = branch -m
+  
+  # リモート操作
+  rv = remote -v
+  rp = remote prune
+  
+  # エイリアス一覧表示
+  alias = !"if test -z $1; then loop=; for k in `git config --get-regexp ^alias\\. | sort | sed -e 's/^alias\\.\\(\\S*\\).*/\\1/g'`; do echo -n $k; loop=\"${loop}1\"; if test ${#loop} -lt 5; then echo -n '\\t'; else echo; loop=; fi; done; exit; fi; git config --list | grep ^alias\\.$1= | sed -e s/^alias\\.//; exit;"
+
+# -----------------------------------------------------------------------------
+# 認証情報設定
+# -----------------------------------------------------------------------------
+
+[credential]
+  helper = cache --timeout=86400
+
+# -----------------------------------------------------------------------------
+# プッシュ設定
+# -----------------------------------------------------------------------------
+
 [push]
-	default = current
+  default = current
+
+# -----------------------------------------------------------------------------
+# その他の設定
+# -----------------------------------------------------------------------------
+
+[core]
+  autocrlf = input
+  editor = vim
+  excludesfile = ~/.gitignore_global
+
+[init]
+  defaultBranch = main
+
+[color]
+  ui = auto
+
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+
+[diff]
+  tool = vimdiff
+
+[diff "tool"]
+  prompt = false
+
+[merge]
+  tool = vimdiff
+
+[pager]
+  branch = false

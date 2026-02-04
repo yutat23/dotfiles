@@ -1,70 +1,225 @@
+" =============================================================================
+" Vim設定ファイル
+" =============================================================================
+
+" -----------------------------------------------------------------------------
+" 基本設定
+" -----------------------------------------------------------------------------
+
+" シンタックスハイライトを有効化
 syntax on
+
+" 行番号を表示
 set number
+
+" 現在の行をハイライト
 set cursorline
+
+" コマンドを表示
 set showcmd
+
+" ステータスラインを常に表示
 set laststatus=2
+
+" ルーラーを表示
 set ruler
+
+" モードを表示
 set showmode
 
-" color
+" -----------------------------------------------------------------------------
+" カラー設定
+" -----------------------------------------------------------------------------
+
+" 256色対応
 set t_Co=256
+
+" 文字コード設定
 set fenc=utf-8
+
+" カラースキーム
 colorscheme molokai
 
-" file operations
+" -----------------------------------------------------------------------------
+" ファイル操作設定
+" -----------------------------------------------------------------------------
+
+" バックアップファイルを作成しない
 set nobackup
+
+" スワップファイルを作成しない
 set noswapfile
+
+" ファイルが外部で変更された場合、自動的に読み込む
 set autoread
+
+" バッファを切り替える際に保存しなくてもOK
 set hidden
+
+" undo履歴を永続化
 set undofile
 set undodir=~/.vim/undo
 
-" editing
-set virtualedit=onemore
-set showmatch
-set splitright
-set wildmode=list:longest
-set visualbell
+" ディレクトリが存在しない場合は作成
+if !isdirectory(&undodir)
+  call mkdir(&undodir, 'p')
+endif
 
-" indentation
+" -----------------------------------------------------------------------------
+" 編集設定
+" -----------------------------------------------------------------------------
+
+" 仮想編集モード（行末の後ろまでカーソルを移動可能）
+set virtualedit=onemore
+
+" 対応する括弧をハイライト
+set showmatch
+
+" 新しいウィンドウを右側に開く
+set splitright
+
+" 新しいウィンドウを下側に開く
+set splitbelow
+
+" コマンドライン補完のモード
+set wildmode=list:longest
+
+" ビジュアルベルを使用（音を鳴らさない）
+set visualbell
+set t_vb=
+
+" -----------------------------------------------------------------------------
+" インデント設定
+" -----------------------------------------------------------------------------
+
+" タブをスペースに展開
 set expandtab
+
+" タブの幅
 set tabstop=2
+
+" インデントの幅
 set shiftwidth=2
+
+" 自動インデント
+set autoindent
+set smartindent
+
+" Makefileではタブを使用
 autocmd FileType make setlocal noexpandtab
 
-" search
+" -----------------------------------------------------------------------------
+" 検索設定
+" -----------------------------------------------------------------------------
+
+" 大文字小文字を区別しない
 set ignorecase
+
+" 検索文字列に大文字が含まれている場合は区別する
 set smartcase
+
+" インクリメンタル検索
 set incsearch
+
+" 検索をループしない
 set wrapscan
+
+" 検索結果をハイライト
 set hlsearch
 
-" visible characters
-set list
-set listchars=tab:▸-,trail:·,extends:»,precedes:«
+" -----------------------------------------------------------------------------
+" 表示設定
+" -----------------------------------------------------------------------------
 
-" keymap
+" 不可視文字を表示
+set list
+
+" 不可視文字の表示方法
+set listchars=tab:▸-,trail:·,extends:»,precedes:«,nbsp:%
+
+" 行を折り返さない
+set nowrap
+
+" 行の先頭で行を折り返す
+set linebreak
+
+" -----------------------------------------------------------------------------
+" キーマッピング
+" -----------------------------------------------------------------------------
+
+" ESCキー2回で検索ハイライトを解除
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
+
+" セミコロンとコロンを入れ替え（;でコマンド入力）
 nnoremap ; :
 nnoremap : ;
+
+" 行単位ではなく表示行単位で移動
 nnoremap j gj
 nnoremap k gk
 
-" xml
+" ウィンドウ移動をCtrl+hjklで
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" -----------------------------------------------------------------------------
+" ファイルタイプ別設定
+" -----------------------------------------------------------------------------
+
+" XML/HTMLの自動補完
 augroup MyXML
   autocmd!
   autocmd Filetype xml,html inoremap <buffer> </ </<C-x><C-o>
 augroup END
 
-" plugin
+" Python設定
+augroup MyPython
+  autocmd!
+  autocmd FileType python setlocal tabstop=4 shiftwidth=4
+augroup END
+
+" Markdown設定
+augroup MyMarkdown
+  autocmd!
+  autocmd FileType markdown setlocal wrap linebreak
+augroup END
+
+" -----------------------------------------------------------------------------
+" プラグイン管理（vim-plug）
+" -----------------------------------------------------------------------------
+
 call plug#begin()
+
+" Base16カラースキーム
 Plug 'chriskempson/base16-vim'
+
+" ステータスライン
 Plug 'itchyny/lightline.vim'
+
 call plug#end()
 
-" base16
+" -----------------------------------------------------------------------------
+" Base16設定
+" -----------------------------------------------------------------------------
+
 if filereadable(expand("~/.vimrc_background"))
   let base16colorspace=256
   source ~/.vimrc_background
 endif
 
+" -----------------------------------------------------------------------------
+" その他の設定
+" -----------------------------------------------------------------------------
+
+" マウスを有効化
+set mouse=a
+
+" クリップボードをシステムと共有（可能な場合）
+if has('clipboard')
+  set clipboard=unnamedplus
+endif
+
+" ファイルタイプの検出とプラグインを有効化
+filetype plugin indent on
