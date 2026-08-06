@@ -1,3 +1,5 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/yutat23/.zsh/completions:"* ]]; then export FPATH="/Users/yutat23/.zsh/completions:$FPATH"; fi
 # =============================================================================
 # zsh設定ファイル
 # =============================================================================
@@ -227,3 +229,138 @@ if [ -e ~/dotfiles/setProxy.sh ]; then
   chmod +x ~/dotfiles/setProxy.sh 2>/dev/null
   source ~/dotfiles/setProxy.sh
 fi
+
+# pnpm
+export PNPM_HOME="/Users/yutat23/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# bun completions
+[ -s "/Users/yutat23/.bun/_bun" ] && source "/Users/yutat23/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+# Codex
+export CODEX_PROFILE_FILE="$HOME/.codex-profile"
+
+_codex_home_for_profile() {
+  case "$1" in
+    p|personal)
+      echo "$HOME/.codex-p"
+      ;;
+    w|work|"")
+      echo "$HOME/.codex-w"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+_codex_normalize_profile() {
+  case "$1" in
+    p|personal)
+      echo "personal"
+      ;;
+    w|work|"")
+      echo "work"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+_codex_load_profile() {
+  local profile
+
+  if [ -r "$CODEX_PROFILE_FILE" ]; then
+    profile="$(<"$CODEX_PROFILE_FILE")"
+  else
+    profile="work"
+  fi
+
+  CODEX_PROFILE="$(_codex_normalize_profile "$profile")" || CODEX_PROFILE="work"
+  CODEX_HOME="$(_codex_home_for_profile "$CODEX_PROFILE")"
+
+  export CODEX_PROFILE CODEX_HOME
+}
+
+_codex_export_gui_env() {
+  if command -v launchctl >/dev/null 2>&1; then
+    command launchctl setenv CODEX_PROFILE "$CODEX_PROFILE" >/dev/null 2>&1
+    command launchctl setenv CODEX_HOME "$CODEX_HOME" >/dev/null 2>&1
+  fi
+}
+
+codex-use() {
+  local profile
+  local codex_home
+
+  profile="$(_codex_normalize_profile "$1")" || {
+    echo "usage: codex-use work|personal" >&2
+    return 2
+  }
+
+  codex_home="$(_codex_home_for_profile "$profile")"
+  printf '%s\n' "$profile" >| "$CODEX_PROFILE_FILE"
+  export CODEX_PROFILE="$profile"
+  export CODEX_HOME="$codex_home"
+  _codex_export_gui_env
+
+  echo "Codex profile: $CODEX_PROFILE ($CODEX_HOME)"
+}
+
+codex-status() {
+  local saved_profile
+
+  if [ -r "$CODEX_PROFILE_FILE" ]; then
+    saved_profile="$(<"$CODEX_PROFILE_FILE")"
+  else
+    saved_profile="work"
+  fi
+
+  echo "Codex profile: $CODEX_PROFILE"
+  echo "CODEX_HOME: $CODEX_HOME"
+  echo "Profile file: $CODEX_PROFILE_FILE ($saved_profile)"
+}
+
+codex() {
+  case "$1" in
+    status|current)
+      codex-status
+      ;;
+    use|switch)
+      shift
+      codex-use "$@"
+      ;;
+    w|work|p|personal)
+      if [ "$#" -eq 1 ]; then
+        codex-use "$1"
+        return
+      fi
+
+      local profile="$1"
+      shift
+      CODEX_HOME="$(_codex_home_for_profile "$profile")" command codex "$@"
+      ;;
+    *)
+      command codex "$@"
+      ;;
+  esac
+}
+
+_codex_load_profile
+_codex_export_gui_env
+
+alias codex-switch='codex-use'
+alias codex-w='codex use work'
+alias codex-p='codex use personal'
+alias codex-s='codex status'
+. "/Users/yutat23/.deno/env"

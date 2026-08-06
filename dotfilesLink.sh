@@ -67,11 +67,12 @@ create_link() {
     # ソースファイルの存在確認
     if [ ! -e "$DOTFILES_DIR/$source" ]; then
         log_warning "Source file not found: $source (skipping)"
-        return 1
+        return 2
     fi
     
     # ターゲットの親ディレクトリが存在するか確認
-    local target_dir=$(dirname "$target")
+    local target_dir
+    target_dir=$(dirname "$target")
     if [ ! -d "$target_dir" ]; then
         log_info "Creating directory: $target_dir"
         mkdir -p "$target_dir"
@@ -107,6 +108,34 @@ create_link() {
     fi
 }
 
+# 旧構成では ~/.config 全体をリポジトリへリンクしていたため、アプリの
+# セッションやキャッシュまで作業ツリーへ書き込まれていた。既存データを
+# 実ディレクトリへコピーしてから、管理対象だけを個別リンクへ切り替える。
+prepare_config_directory() {
+    local config_dir="$HOME_DIR/.config"
+    local legacy_target="$DOTFILES_DIR/.config"
+    local resolved_target=""
+
+    if [ -L "$config_dir" ]; then
+        resolved_target=$(cd "$config_dir" && pwd -P)
+    fi
+
+    if [ "$resolved_target" = "$legacy_target" ]; then
+        log_info "Migrating legacy ~/.config symlink to a real directory..."
+        rm "$config_dir"
+        mkdir -p "$config_dir"
+
+        if ! cp -a "$legacy_target/." "$config_dir/"; then
+            log_error "Failed to preserve existing ~/.config data"
+            return 1
+        fi
+
+        log_success "Preserved existing ~/.config data"
+    elif [ ! -e "$config_dir" ]; then
+        mkdir -p "$config_dir"
+    fi
+}
+
 # メイン処理
 main() {
     log_info "Starting dotfiles setup..."
@@ -134,30 +163,51 @@ main() {
     local success_count=0
     local skip_count=0
     local error_count=0
+    local result=0
     
     for link_spec in "${links[@]}"; do
         IFS=':' read -r source target description <<< "$link_spec"
         if create_link "$source" "$HOME_DIR/$target" "$description"; then
-            if [ $? -eq 0 ]; then
-                ((success_count++))
-            else
-                ((skip_count++))
-            fi
+            success_count=$((success_count + 1))
         else
-            ((error_count++))
+            result=$?
+            if [ "$result" -eq 2 ]; then
+                skip_count=$((skip_count + 1))
+            else
+                error_count=$((error_count + 1))
+            fi
         fi
     done
     
-    # Neovim設定（存在する場合）
+    # ~/.config はアプリの生成データも置かれるため、管理対象だけをリンクする
     if [ -d "$DOTFILES_DIR/.config" ]; then
-        log_info "Setting up Neovim configuration..."
-        if create_link ".config" "$HOME_DIR/.config" "Neovim configuration directory"; then
-            ((success_count++))
-        else
-            ((skip_count++))
-        fi
+        prepare_config_directory
+
+        declare -a config_links=(
+            ".config/base16-shell:$HOME_DIR/.config/base16-shell:Base16 Shell configuration"
+            ".config/fish/config.fish:$HOME_DIR/.config/fish/config.fish:Fish configuration"
+            ".config/fish/fish_plugins:$HOME_DIR/.config/fish/fish_plugins:Fish plugin list"
+            ".config/nvim:$HOME_DIR/.config/nvim:Neovim configuration"
+            ".config/gh/config.yml:$HOME_DIR/.config/gh/config.yml:GitHub CLI configuration"
+            ".config/herdr/config.toml:$HOME_DIR/.config/herdr/config.toml:Herdr configuration"
+            ".config/zed/settings.json:$HOME_DIR/.config/zed/settings.json:Zed configuration"
+        )
+
+        for link_spec in "${config_links[@]}"; do
+            IFS=':' read -r source target description <<< "$link_spec"
+            if create_link "$source" "$target" "$description"; then
+                success_count=$((success_count + 1))
+            else
+                result=$?
+                if [ "$result" -eq 2 ]; then
+                    skip_count=$((skip_count + 1))
+                else
+                    error_count=$((error_count + 1))
+                fi
+            fi
+        done
     else
-        log_warning ".config directory not found, skipping Neovim setup"
+        log_warning ".config directory not found, skipping XDG configuration"
     fi
     
     # 結果を表示

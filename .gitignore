@@ -32,3 +32,26 @@ desktop.ini
 
 # ローカル設定
 local.sh
+
+# =============================================================================
+# ~/.config 配下のアプリ生成データ
+# =============================================================================
+
+# 端末・セッション固有データ
+.config/Futu-Mac/
+.config/raycast/
+.config/herdr/session.json
+.config/gh/hosts.yml
+
+# fishプラグインの生成物と端末固有状態
+.config/fish/completions/
+.config/fish/conf.d/
+.config/fish/functions/
+.config/fish/themes/
+.config/fish/fish_variables
+
+# エディタが生成するローカルデータ
+.config/nvim/.neoconf.json
+.config/zed/conversations/
+.config/zed/prompts/
+.config/zed/themes/

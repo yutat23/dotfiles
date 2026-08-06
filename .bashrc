@@ -192,3 +192,5 @@ if [ -e ~/dotfiles/setProxy.sh ]; then
   chmod +x ~/dotfiles/setProxy.sh 2>/dev/null
   source ~/dotfiles/setProxy.sh
 fi
+. "/Users/yutat23/.deno/env"
+source /Users/yutat23/.local/share/bash-completion/completions/deno.bash
